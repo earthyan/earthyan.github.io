@@ -154,6 +154,78 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-strpos引发的一系列思考" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/28/strpos引发的一系列思考/">“strpos” 引发的一系列思考</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/28/strpos引发的一系列思考/" class="archive-article-date">
+  	<time datetime="2017-07-28T14:40:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>v站的一个问题吸引了我，相信大多数人写过这样的代码，但是运行得到的答案却出乎意料，引发了我的一系列后续的思考。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">function getReferer($link)</div><div class="line">&#123;</div><div class="line">    $refMap = [</div><div class="line">        &apos;baidu&apos; =&gt; &apos;百度&apos;,</div><div class="line">        &apos;sougou&apos; =&gt; &apos;搜狗&apos;,</div><div class="line">        &apos;360&apos; =&gt; &apos;360&apos;,</div><div class="line">        &apos;google&apos; =&gt; &apos;谷歌&apos;</div><div class="line">    ];</div><div class="line">    foreach ($refMap as $key =&gt; $value) &#123;</div><div class="line">        if (strpos($link, $key) !== false) &#123;</div><div class="line">            return $value;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return &apos;其他&apos;;</div><div class="line">&#125;</div><div class="line">echo getReferer(&apos;https://www.google.com/search?workd=%FD%##%#%E%D%D%D%D%D%D%&apos;);</div></pre></td></tr></table></figure>
+<p>// output   360  </p>
+<p>为什么 是不是很奇怪 ？<br>首先 我们来看一下PHP手册中strpos 函数的详解</p>
+<p><em>strpos — 查找字符串首次出现的位置<br>mixed strpos ( string $haystack , mixed $needle [, int $offset = 0 ] )<br>返回 needle 在 haystack 中首次出现的数字位置。<br>haystack<br>在该字符串中进行查找。<br>needle<br><strong>如果 needle 不是一个字符串，那么它将被转换为整型并被视为字符的顺序值。</strong><br>offset<br>如果提供了此参数，搜索会从字符串该字符数的起始位置开始统计。 如果是负数，搜索会从字符串结尾指定字符数开始。<br>返回 needle 存在于 haystack 字符串起始的位置(独立于 offset)。同时注意字符串位置是从0开始，而不是从1开始的。<br>如果没找到 needle，将返回 FALSE。<br>Warning<br>此函数可能返回布尔值 FALSE，但也可能返回等同于 FALSE 的非布尔值。请阅读 布尔类型章节以获取更多信息。应使用 === 运算符来测试此函数的返回值</em></p>
+<p>强调的注释，我们用函数的时候很少注意到吧<br>我们先来运行一下结果</p>
+<figure class="highlight plain"><figcaption><span>= 'https://www.google.com/search?workd=%FD%##%#%E%D%D%D%D%D%D%';</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">    $refMap = [</div><div class="line">        &apos;baidu&apos; =&gt; &apos;百度&apos;,</div><div class="line">        &apos;sougou&apos; =&gt; &apos;搜狗&apos;,</div><div class="line">        &apos;360&apos; =&gt; &apos;360&apos;,</div><div class="line">        &apos;google&apos; =&gt; &apos;谷歌&apos;</div><div class="line">    ];</div><div class="line">    foreach ($refMap as $key =&gt; $value) &#123;</div><div class="line">        var_dump($key);</div><div class="line">        echo &quot;&lt;br&gt;&quot;;</div><div class="line">    &#125;</div><div class="line">//output</div><div class="line">string(5) &quot;baidu&quot; </div><div class="line">string(6) &quot;sougou&quot; </div><div class="line">int(360) </div><div class="line">string(6) &quot;google&quot;</div></pre></td></tr></table></figure>
+<p><strong>解释：</strong><br>原因就是 ‘360’ 被当做int 类型来处理解释了，于是360 转乘ASCII码  360%128=104 chr(104)=’h’,于是strpos(“<a href="http://..........&quot;,360" target="_blank" rel="external">http://..........&quot;,360</a>)  返回0<br><a href="http://php.net/manual/zh/language.types.array.php" target="_blank" rel="external">PHP手册通道</a><br><!--我把重点划一下线哦--><br>key 可以是 integer 或者 string。value 可以是任意类型。<br>此外 key 会有如下的强制转换：<br>    •    包含有合法整型值的字符串会被转换为整型。例如键名 “8” 实际会被储存为 8。但是 “08” 则不会强制转换，因为其不是一个合法的十进制数值。<br>    •    浮点数也会被转换为整型，意味着其小数部分会被舍去。例如键名 8.7 实际会被储存为 8。<br>    •    布尔值也会被转换成整型。即键名 true 实际会被储存为 1 而键名 false 会被储存为 0。<br>    •    Null 会被转换为空字符串，即键名 null 实际会被储存为 “”。<br>    •    数组和对象不能被用为键名。坚持这么做会导致警告：Illegal offset type。<br>如果在数组定义中多个单元都使用了同一个键名，则只使用了最后一个，之前的都被覆盖了。</p>
+<p><strong>附解决方法</strong></p>
+<figure class="highlight plain"><figcaption><span>= new stdClass();</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">$result-&gt;&#123;&apos;12w&apos;&#125; = &apos;大扫除&apos;;</div><div class="line">$result-&gt;&#123;&apos;3.3&apos;&#125; = &apos; 搜索 &apos;;</div><div class="line">$result-&gt;&#123;&apos;456&apos;&#125; = &apos;333&apos;;</div><div class="line">$result-&gt;&#123;789&#125; = 1266;</div><div class="line"></div><div class="line">var_dump($result);</div><div class="line">// 输出：(可以看到键全都是string类型的)</div><div class="line">// object(stdClass)#1 (4) &#123;</div><div class="line">//   [&quot;12w&quot;]=&gt;</div><div class="line">//   string(9) &quot;大扫除&quot;</div><div class="line">//   [&quot;3.3&quot;]=&gt;</div><div class="line">//   string(8) &quot; 搜索 &quot;</div><div class="line">//   [&quot;456&quot;]=&gt;</div><div class="line">//   string(3) &quot;333&quot;</div><div class="line">//   [&quot;789&quot;]=&gt;</div><div class="line">//   int(1266)</div><div class="line">// &#125;</div><div class="line"></div><div class="line">// 转换为array：</div><div class="line">var_dump((array)$result);</div><div class="line">// 输出：(可以看到键全都是string类型的)</div><div class="line">// array(4) &#123;</div><div class="line">//   [&quot;12w&quot;]=&gt;</div><div class="line">//   string(9) &quot;大扫除&quot;</div><div class="line">//   [&quot;3.3&quot;]=&gt;</div><div class="line">//   string(8) &quot; 搜索 &quot;</div><div class="line">//   [&quot;456&quot;]=&gt;</div><div class="line">//   string(3) &quot;333&quot;</div><div class="line">//   [&quot;789&quot;]=&gt;</div><div class="line">//   int(1266)</div><div class="line">// &#125;</div></pre></td></tr></table></figure>
+<p>–by hainan  </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">技术畅想</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/28/strpos引发的一系列思考/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-mysql-常用的一些命令整理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -241,7 +313,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="http://7xqmjb.com1.z0.glb.clouddn.com/2017012468681WechatIMG2.jpeg" alt="2017012468681WechatIMG2.jpeg"><br>年末，新年的钟声慢慢接近<br>晚上回去 和同学朋友交流一年的工作心得<br>方向对了吗？<br>理财了吗（存到钱了吗）？<br>工作有所收获吗？<br>身体管理健康吗？<br>一问：<br>坚信互联网还是未来的宠儿，不是说站在风口上，🐷都会飞起来吗<br>二问：<br>玩了半年的股票，最后亏了六百，但是还是什么都不懂，纯粹是抓瞎<br>现在也就是买买理财，挣点。虽然没时间学金融方面的知识，但是<br>要学会主动，去学去接触。以后要多看财经类节目，现在真的开始<br>意识到金融知识有多重要，可以挣大钱啊哈哈。<br>三问：<br>今年的工作不是很顺利，坎坎坷坷，但也学会了不少东西的。基本上<br>掌握了，不够精，不够深。明年就往这个方向，嗯，多看多学多做。<br>四问：<br>去了健身房后，身体好了很多，好的习惯要保持。<br>要多保护眼睛，在床上不要玩手机！！！！！<br>嗯，就这么多。<br>－－by hainan</p>
+        <p>年末，新年的钟声慢慢接近<br>晚上回去 和同学朋友交流一年的工作心得<br>方向对了吗？<br>理财了吗（存到钱了吗）？<br>工作有所收获吗？<br>身体管理健康吗？<br>一问：<br>坚信互联网还是未来的宠儿，不是说站在风口上，🐷都会飞起来吗<br>二问：<br>玩了半年的股票，最后亏了六百，但是还是什么都不懂，纯粹是抓瞎<br>现在也就是买买理财，挣点。虽然没时间学金融方面的知识，但是<br>要学会主动，去学去接触。以后要多看财经类节目，现在真的开始<br>意识到金融知识有多重要，可以挣大钱啊哈哈。<br>三问：<br>今年的工作不是很顺利，坎坎坷坷，但也学会了不少东西的。基本上<br>掌握了，不够精，不够深。明年就往这个方向，嗯，多看多学多做。<br>四问：<br>去了健身房后，身体好了很多，好的习惯要保持。<br>要多保护眼睛，在床上不要玩手机！！！！！<br>嗯，就这么多。<br>－－by hainan</p>
 
       
 
@@ -428,6 +500,10 @@
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">技术畅想</a>
+              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">旧事往昔</a>

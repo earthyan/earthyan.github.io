@@ -6,17 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017 | Earthyan&#39;s Blog</title>
+  <title>“strpos” 引发的一系列思考 | Earthyan&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="不忘初心">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Earthyan's Blog">
-<meta property="og:url" content="http://yoursite.com/archives/2017/index.html">
+  <meta name="description" content="v站的一个问题吸引了我，相信大多数人写过这样的代码，但是运行得到的答案却出乎意料，引发了我的一系列后续的思考。
+12345678910111213141516function getReferer($link)&amp;#123;    $refMap = [        &amp;apos;baidu&amp;apos; =&amp;gt; &amp;apos;百度&amp;apos;,        &amp;apos;sougou&amp;apos;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“strpos” 引发的一系列思考">
+<meta property="og:url" content="http://yoursite.com/2017/07/28/strpos引发的一系列思考/index.html">
 <meta property="og:site_name" content="Earthyan's Blog">
-<meta property="og:description" content="不忘初心">
+<meta property="og:description" content="v站的一个问题吸引了我，相信大多数人写过这样的代码，但是运行得到的答案却出乎意料，引发了我的一系列后续的思考。
+12345678910111213141516function getReferer($link)&amp;#123;    $refMap = [        &amp;apos;baidu&amp;apos; =&amp;gt; &amp;apos;百度&amp;apos;,        &amp;apos;sougou&amp;apos;">
+<meta property="og:updated_time" content="2017-07-28T14:51:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Earthyan's Blog">
-<meta name="twitter:description" content="不忘初心">
+<meta name="twitter:title" content="“strpos” 引发的一系列思考">
+<meta name="twitter:description" content="v站的一个问题吸引了我，相信大多数人写过这样的代码，但是运行得到的答案却出乎意料，引发了我的一系列后续的思考。
+12345678910111213141516function getReferer($link)&amp;#123;    $refMap = [        &amp;apos;baidu&amp;apos; =&amp;gt; &amp;apos;百度&amp;apos;,        &amp;apos;sougou&amp;apos;">
   
     <link rel="alternative" href="/atom.xml" title="Earthyan&#39;s Blog" type="application/atom+xml">
   
@@ -152,36 +156,66 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-strpos引发的一系列思考" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/28/strpos引发的一系列思考/" class="archive-article-date">
-  	<time datetime="2017-07-28T14:40:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-28</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/07/28/strpos引发的一系列思考/">“strpos” 引发的一系列思考</a>
+    <h1 class="article-title" itemprop="name">
+      “strpos” 引发的一系列思考
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/07/28/strpos引发的一系列思考/" class="archive-article-date">
+  	<time datetime="2017-07-28T14:40:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>v站的一个问题吸引了我，相信大多数人写过这样的代码，但是运行得到的答案却出乎意料，引发了我的一系列后续的思考。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">function getReferer($link)</div><div class="line">&#123;</div><div class="line">    $refMap = [</div><div class="line">        &apos;baidu&apos; =&gt; &apos;百度&apos;,</div><div class="line">        &apos;sougou&apos; =&gt; &apos;搜狗&apos;,</div><div class="line">        &apos;360&apos; =&gt; &apos;360&apos;,</div><div class="line">        &apos;google&apos; =&gt; &apos;谷歌&apos;</div><div class="line">    ];</div><div class="line">    foreach ($refMap as $key =&gt; $value) &#123;</div><div class="line">        if (strpos($link, $key) !== false) &#123;</div><div class="line">            return $value;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return &apos;其他&apos;;</div><div class="line">&#125;</div><div class="line">echo getReferer(&apos;https://www.google.com/search?workd=%FD%##%#%E%D%D%D%D%D%D%&apos;);</div></pre></td></tr></table></figure>
+<p>// output   360  </p>
+<p>为什么 是不是很奇怪 ？<br>首先 我们来看一下PHP手册中strpos 函数的详解</p>
+<p><em>strpos — 查找字符串首次出现的位置<br>mixed strpos ( string $haystack , mixed $needle [, int $offset = 0 ] )<br>返回 needle 在 haystack 中首次出现的数字位置。<br>haystack<br>在该字符串中进行查找。<br>needle<br><strong>如果 needle 不是一个字符串，那么它将被转换为整型并被视为字符的顺序值。</strong><br>offset<br>如果提供了此参数，搜索会从字符串该字符数的起始位置开始统计。 如果是负数，搜索会从字符串结尾指定字符数开始。<br>返回 needle 存在于 haystack 字符串起始的位置(独立于 offset)。同时注意字符串位置是从0开始，而不是从1开始的。<br>如果没找到 needle，将返回 FALSE。<br>Warning<br>此函数可能返回布尔值 FALSE，但也可能返回等同于 FALSE 的非布尔值。请阅读 布尔类型章节以获取更多信息。应使用 === 运算符来测试此函数的返回值</em></p>
+<p>强调的注释，我们用函数的时候很少注意到吧<br>我们先来运行一下结果</p>
+<figure class="highlight plain"><figcaption><span>= 'https://www.google.com/search?workd=%FD%##%#%E%D%D%D%D%D%D%';</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">    $refMap = [</div><div class="line">        &apos;baidu&apos; =&gt; &apos;百度&apos;,</div><div class="line">        &apos;sougou&apos; =&gt; &apos;搜狗&apos;,</div><div class="line">        &apos;360&apos; =&gt; &apos;360&apos;,</div><div class="line">        &apos;google&apos; =&gt; &apos;谷歌&apos;</div><div class="line">    ];</div><div class="line">    foreach ($refMap as $key =&gt; $value) &#123;</div><div class="line">        var_dump($key);</div><div class="line">        echo &quot;&lt;br&gt;&quot;;</div><div class="line">    &#125;</div><div class="line">//output</div><div class="line">string(5) &quot;baidu&quot; </div><div class="line">string(6) &quot;sougou&quot; </div><div class="line">int(360) </div><div class="line">string(6) &quot;google&quot;</div></pre></td></tr></table></figure>
+<p><strong>解释：</strong><br>原因就是 ‘360’ 被当做int 类型来处理解释了，于是360 转乘ASCII码  360%128=104 chr(104)=’h’,于是strpos(“<a href="http://..........&quot;,360" target="_blank" rel="external">http://..........&quot;,360</a>)  返回0<br><a href="http://php.net/manual/zh/language.types.array.php" target="_blank" rel="external">PHP手册通道</a><br><!--我把重点划一下线哦--><br>key 可以是 integer 或者 string。value 可以是任意类型。<br>此外 key 会有如下的强制转换：<br>    •    包含有合法整型值的字符串会被转换为整型。例如键名 “8” 实际会被储存为 8。但是 “08” 则不会强制转换，因为其不是一个合法的十进制数值。<br>    •    浮点数也会被转换为整型，意味着其小数部分会被舍去。例如键名 8.7 实际会被储存为 8。<br>    •    布尔值也会被转换成整型。即键名 true 实际会被储存为 1 而键名 false 会被储存为 0。<br>    •    Null 会被转换为空字符串，即键名 null 实际会被储存为 “”。<br>    •    数组和对象不能被用为键名。坚持这么做会导致警告：Illegal offset type。<br>如果在数组定义中多个单元都使用了同一个键名，则只使用了最后一个，之前的都被覆盖了。</p>
+<p><strong>附解决方法</strong></p>
+<figure class="highlight plain"><figcaption><span>= new stdClass();</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">$result-&gt;&#123;&apos;12w&apos;&#125; = &apos;大扫除&apos;;</div><div class="line">$result-&gt;&#123;&apos;3.3&apos;&#125; = &apos; 搜索 &apos;;</div><div class="line">$result-&gt;&#123;&apos;456&apos;&#125; = &apos;333&apos;;</div><div class="line">$result-&gt;&#123;789&#125; = 1266;</div><div class="line"></div><div class="line">var_dump($result);</div><div class="line">// 输出：(可以看到键全都是string类型的)</div><div class="line">// object(stdClass)#1 (4) &#123;</div><div class="line">//   [&quot;12w&quot;]=&gt;</div><div class="line">//   string(9) &quot;大扫除&quot;</div><div class="line">//   [&quot;3.3&quot;]=&gt;</div><div class="line">//   string(8) &quot; 搜索 &quot;</div><div class="line">//   [&quot;456&quot;]=&gt;</div><div class="line">//   string(3) &quot;333&quot;</div><div class="line">//   [&quot;789&quot;]=&gt;</div><div class="line">//   int(1266)</div><div class="line">// &#125;</div><div class="line"></div><div class="line">// 转换为array：</div><div class="line">var_dump((array)$result);</div><div class="line">// 输出：(可以看到键全都是string类型的)</div><div class="line">// array(4) &#123;</div><div class="line">//   [&quot;12w&quot;]=&gt;</div><div class="line">//   string(9) &quot;大扫除&quot;</div><div class="line">//   [&quot;3.3&quot;]=&gt;</div><div class="line">//   string(8) &quot; 搜索 &quot;</div><div class="line">//   [&quot;456&quot;]=&gt;</div><div class="line">//   string(3) &quot;333&quot;</div><div class="line">//   [&quot;789&quot;]=&gt;</div><div class="line">//   int(1266)</div><div class="line">// &#125;</div></pre></td></tr></table></figure>
+<p>–by hainan  </p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你的赏识<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -193,133 +227,88 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/07/28/strpos引发的一系列思考/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/02/27/mysql-常用的一些命令整理/" class="archive-article-date">
-  	<time datetime="2017-02-27T09:56:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-27</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/02/27/mysql-常用的一些命令整理/">mysql 常用的一些命令整理</a>
-    </h1>
+  
+    <a href="/2017/02/27/mysql-常用的一些命令整理/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">mysql 常用的一些命令整理</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/24/年末-发现-拷问/" class="archive-article-date">
-  	<time datetime="2017-01-24T06:08:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-24</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/24/年末-发现-拷问/">年末 发现 拷问</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">旧事往昔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/23/First-BLOG/" class="archive-article-date">
-  	<time datetime="2017-01-23T05:24:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/23/First-BLOG/">First BLOG</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">旧事往昔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -337,8 +326,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
