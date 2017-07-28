@@ -6,21 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>mysql 常用的一些命令整理 | Earthyan&#39;s Blog</title>
+  <title>MySQL 常用命令小结 | Earthyan&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="MySQL 数据库常用命令小结
-1、MySQL常用命令 创建数据库  create database student ; 选择数据库  use student;删除数据库  drop database student;显示所有的数据库 show databases;显示所有的数据表   show tables;表的详细结构描述   describe tablename;显示当前mysql版本和当前">
+  <meta name="description" content="MySQL日常管理
+创建数据库  create database student ;选择数据库  use student;删除数据库  drop database student;显示所有的数据库 show databases;显示所有的数据表   show tables;表的详细结构描述   describe tablename;显示当前mysql版本和当前日期select version(),">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql 常用的一些命令整理">
+<meta property="og:title" content="MySQL 常用命令小结">
 <meta property="og:url" content="http://yoursite.com/2017/02/27/mysql-常用的一些命令整理/index.html">
 <meta property="og:site_name" content="Earthyan's Blog">
-<meta property="og:description" content="MySQL 数据库常用命令小结
-1、MySQL常用命令 创建数据库  create database student ; 选择数据库  use student;删除数据库  drop database student;显示所有的数据库 show databases;显示所有的数据表   show tables;表的详细结构描述   describe tablename;显示当前mysql版本和当前">
-<meta property="og:updated_time" content="2017-02-27T09:57:16.000Z">
+<meta property="og:description" content="MySQL日常管理
+创建数据库  create database student ;选择数据库  use student;删除数据库  drop database student;显示所有的数据库 show databases;显示所有的数据表   show tables;表的详细结构描述   describe tablename;显示当前mysql版本和当前日期select version(),">
+<meta property="og:updated_time" content="2017-07-28T15:05:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql 常用的一些命令整理">
-<meta name="twitter:description" content="MySQL 数据库常用命令小结
-1、MySQL常用命令 创建数据库  create database student ; 选择数据库  use student;删除数据库  drop database student;显示所有的数据库 show databases;显示所有的数据表   show tables;表的详细结构描述   describe tablename;显示当前mysql版本和当前">
+<meta name="twitter:title" content="MySQL 常用命令小结">
+<meta name="twitter:description" content="MySQL日常管理
+创建数据库  create database student ;选择数据库  use student;删除数据库  drop database student;显示所有的数据库 show databases;显示所有的数据表   show tables;表的详细结构描述   describe tablename;显示当前mysql版本和当前日期select version(),">
   
     <link rel="alternative" href="/atom.xml" title="Earthyan&#39;s Blog" type="application/atom+xml">
   
@@ -163,7 +163,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      mysql 常用的一些命令整理
+      MySQL 常用命令小结
     </h1>
   
 
@@ -176,12 +176,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>MySQL 数据库常用命令小结</p>
-<p>1、MySQL常用命令<br> 创建数据库  create database student ;<br> 选择数据库  use student;<br>删除数据库  drop database student;<br>显示所有的数据库 show databases;<br>显示所有的数据表   show tables;<br>表的详细结构描述   describe tablename;<br>显示当前mysql版本和当前日期<br>select version(),current_date(),NOW(),USER();一些函数<br>重命名表: mysql &gt; alter table table_name rename to new_table_name;<br>显示create table 语句  SHOW CREATE TABLE table_name; </p>
-<p>2、mysql 权限操作：<br>shell&gt;  mysql -u root -p<br>mysql&gt; update user set password=password(”123456″) where user=’root’;<br>mysql&gt; flush privileges //刷新数据库<br>mysql&gt;grant all privileges on <em>.</em> to user@localhost identified by ’something’;</p>
-<p>3、grant<br>创建一个可以从任何地方连接服务器的一个完全的超级用户，但是必须使用一个口令something做这个<br>mysql&gt; grant all privileges on <em>.</em> to user@localhost identified by ’something’ with<br>增加新用户<br>格式：grant select on 数据库.<em> to 用户名@登录主机 identified by “密码”<br>GRANT ALL PRIVILEGES ON </em>.<em> TO monty@localhost IDENTIFIED BY ’something’ WITH GRANT OPTION;<br>GRANT ALL PRIVILEGES ON </em>.<em> TO monty@”%” IDENTIFIED BY ’something’ WITH GRANT OPTION;<br>删除授权：<br>mysql&gt; revoke all privileges on </em>.<em> from root@”%”;<br>mysql&gt; delete from user where user=”root” and host=”%”;<br>mysql&gt; flush privileges;<br>创建一个用户custom在特定客户端it363.com登录，可访问特定数据库fangchandb<br>mysql &gt;grant select, insert, update, delete, create,drop on fangchandb.</em> to custom@ it363.com identified by ‘ passwd’<br>4 . 常用的alter table<br>1：删除列<br>ALTER TABLE 【表名字】 DROP 【列名称】<br>2：增加列<br>ALTER TABLE 【表名字】 ADD 【列名称】 INT NOT NULL  COMMENT ‘注释说明’<br>3：修改列的类型信息<br>ALTER TABLE 【表名字】 CHANGE 【列名称】【新列名称（这里可以用和原来列同名即可）】 BIGINT NOT NULL  COMMENT ‘注释说明’<br>4：重命名列<br>ALTER TABLE 【表名字】 CHANGE 【列名称】【新列名称】 BIGINT NOT NULL  COMMENT ‘注释说明’<br>5：重命名表<br>ALTER TABLE 【表名字】 RENAME 【表新名字】<br>6：删除表中主键<br>Alter TABLE 【表名字】 drop primary key<br>7：添加主键<br>ALTER TABLE sj_resource_charges ADD CONSTRAINT PK_SJ_RESOURCE_CHARGES PRIMARY KEY (resid,resfromid)<br>8：添加索引<br>ALTER TABLE sj_resource_charges add index INDEX_NAME (name);<br>9: 添加唯一限制条件索引<br>ALTER TABLE sj_resource_charges add unique emp_name2(cardnumber);<br>10: 删除索引<br>alter table tablename drop index emp_name;<br>11:修改数据库引擎<br>ALTER TABLE table_name ENGINE=MyISAM | InnoDB; </p>
-<p>5、将文本数据转到数据库中<br>1、数据传入命令 load data local infile “c://school.txt” into table 表名;<br>注意：你最好将文件复制到[url=file:////mysql//bin]//mysql//bin[/url]目录下，并且要先用use命令打表所在的库。<br>6、备份数据库</p>
-<p>1.导出整个数据库<br>导出文件默认是存在mysql/bin目录下<br>mysqldump -u 用户名 -p 数据库名 &gt; 导出的文件名<br>mysqldump -u user_name -p123456 database_name &gt; outfile_name.sql<br>2.导出一个表<br>mysqldump -u 用户名 -p 数据库名 表名&gt; 导出的文件名<br>mysqldump -u user_name -p database_name table_name &gt; outfile_name.sql<br>3.导出一个数据库结构<br>mysqldump -u user_name -p -d –add-drop-table database_name &gt; outfile_name.sql<br>-d 没有数据 –add-drop-table 在每个create语句之前增加一个drop table<br>4.带语言参数导出<br>mysqldump -uroot -p –default-character-set=latin1 –set-charset=gbk –skip-opt database_name &gt; outfile_name.sql</p>
+        <p><strong>MySQL日常管理</strong></p>
+<p>创建数据库  create database student ;<br>选择数据库  use student;<br>删除数据库  drop database student;<br>显示所有的数据库 show databases;<br>显示所有的数据表   show tables;<br>表的详细结构描述   describe tablename;<br>显示当前mysql版本和当前日期<br>select version(),current_date(),NOW(),USER();一些函数<br>重命名表: mysql &gt; alter table table_name rename to new_table_name;<br>显示create table 语句  SHOW CREATE TABLE table_name; </p>
+<p><strong>MYSQL权限操作</strong></p>
+<figure class="highlight plain"><figcaption><span>mysql -u root -p</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; update user set password=password(”123456″) where user=’root’;</div><div class="line">mysql&gt; flush privileges //刷新数据库</div></pre></td></tr></table></figure>
+<p>创建一个可以从任何地方连接服务器的一个完全的超级用户<br>mysql&gt; grant all privileges on <em>.</em> to user@localhost identified by ’something’<br>增加新用户<br>格式：grant select on 数据库.<em> to 用户名@登录主机 identified by “密码”<br>GRANT ALL PRIVILEGES ON </em>.* TO monty@localhost IDENTIFIED BY ’something’ WITH GRANT OPTION;<br>删除授权：</p>
+<figure class="highlight plain"><figcaption><span>revoke all privileges on *.* from root@”%”;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; delete from user where user=”root” and host=”%”;</div><div class="line">mysql&gt; flush privileges;</div></pre></td></tr></table></figure>
+<p><strong>alter table </strong><br>1：删除列<br>ALTER TABLE 【表名字】 DROP 【列名称】<br>2：增加列<br>ALTER TABLE 【表名字】 ADD 【列名称】 INT NOT NULL  COMMENT ‘注释说明’<br>3：修改列的类型信息<br>ALTER TABLE 【表名字】 CHANGE 【列名称】【新列名称（这里可以用和原来列同名即可）】 BIGINT NOT NULL  COMMENT ‘注释说明’<br>4：重命名列<br>ALTER TABLE 【表名字】 CHANGE 【列名称】【新列名称】 BIGINT NOT NULL  COMMENT ‘注释说明’<br>5：重命名表<br>ALTER TABLE 【表名字】 RENAME 【表新名字】<br>6：删除表中主键<br>Alter TABLE 【表名字】 drop primary key<br>7：添加主键<br>ALTER TABLE sj_resource_charges ADD CONSTRAINT PK_SJ_RESOURCE_CHARGES PRIMARY KEY (resid,resfromid)<br>8：添加索引<br>ALTER TABLE sj_resource_charges add index INDEX_NAME (name);<br>9: 添加唯一限制条件索引<br>ALTER TABLE sj_resource_charges add unique emp_name2(cardnumber);<br>10: 删除索引<br>alter table tablename drop index emp_name;<br>11:修改数据库引擎<br>ALTER TABLE table_name ENGINE=MyISAM | InnoDB; </p>
+<p><strong>数据库导入导出</strong></p>
+<p>导入导出文件默认是存在mysql/bin目录下</p>
+<figure class="highlight plain"><figcaption><span>-u 用户名 -p 数据库名 > 导出的文件名</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysqldump -u user_name -p123456 database_name &gt; export.sql</div><div class="line">mysql -u user_name -p123456 database_name &lt; import.sql</div><div class="line">source import.sql</div></pre></td></tr></table></figure>
 
       
 
